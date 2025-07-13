@@ -118,12 +118,6 @@ git branch -M main
 git remote add origin https://github.com/untucked/pdf-to-voice-OpenAI.git
 git push -u origin main
 ```
-
----
-
-## 🐳 Optional: Containerization
-To ensure it runs on any system, consider containerizing this with Docker. Example `Dockerfile` can be provided on request.
-
 ---
 
 ## 📝 License
