@@ -1,0 +1,4 @@
+openai
+pydub
+simpleaudio
+playsound
