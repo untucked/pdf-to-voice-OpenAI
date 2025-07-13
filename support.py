@@ -11,6 +11,8 @@ import configparser
 import sys
 from pathlib import Path
 from playsound import playsound
+from pydub import AudioSegment
+
 
 def clean_text(text):
     # Remove bracketed [1], parenthetical (12)
