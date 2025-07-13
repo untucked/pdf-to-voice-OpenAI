@@ -35,7 +35,9 @@ def clean_text(text):
 
 def remove_references_section(text: str) -> str:
     # Match "References" (case-insensitive), followed by anything until the end of the text
-    return re.sub(r'\n?references\b.*', '', text, flags=re.IGNORECASE | re.DOTALL)
+    # also look for "Sources" and "Bibliography"
+    text = re.sub(r'\b(references|sources|bibliography)\b.*', '', text, flags=re.IGNORECASE | re.DOTALL)
+    return text
 
 def init_pytesseract():
     config = configparser.ConfigParser()
@@ -152,7 +154,7 @@ def convert_to_mp3_openai(chunks, output_dir, name="output", test_script=False, 
                 print(f"❌ Failed to generate chunk {i+1}: {e}")
 
 def extract_part_number(filename):
-    match = re.search(r'_part_(\d+)\.mp3$', filename)
+    match = re.search(r'_part(\d+)\.mp3$', filename)
     return int(match.group(1)) if match else float('inf')
 
 def merge_mp3s(AudioSegment, mp3_name, output_dir='output',
