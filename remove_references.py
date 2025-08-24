@@ -2,7 +2,7 @@ from docx import Document
 import re
 import os
 
-def clean_docx_references(input_path):
+def clean_docx_references(input_file_path):
     """
     Removes in-text references like [1], [12], etc. from a .docx file,
     stopping at the 'References' section. Saves the cleaned file in the
@@ -12,7 +12,7 @@ def clean_docx_references(input_path):
     reference_pattern = re.compile(r"(\[\d+\])+")
     
     # Load document
-    doc = Document(input_path)
+    doc = Document(input_file_path)
     
     # Create new document
     cleaned_doc = Document()

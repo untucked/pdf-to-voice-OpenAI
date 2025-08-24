@@ -115,7 +115,8 @@ def get_full_text(pdf_path, print_text=False):
         full_text = remove_references_section(full_text)
     return full_text
 
-def convert_to_mp3_openai(chunks, output_dir, name="output", test_script=False, voice="echo", model="tts-1"):
+def convert_to_mp3_openai(chunks, output_dir, name="output", test_script=False, voice="echo", model="tts-1",
+                          include_part_intro=False):
     timestamps_path = os.path.join(output_dir, f"{name}_timestamps.txt")
     with open(timestamps_path, "w") as ts_file:
         total_time = 0
@@ -128,11 +129,15 @@ def convert_to_mp3_openai(chunks, output_dir, name="output", test_script=False, 
                 continue
 
             # Generate speech with OpenAI
+            if include_part_intro:
+                include_intro = f"Part {i+1}. "
+            else:
+                include_intro = ""
             try:
                 response = openai.audio.speech.create(
                     model=model,
                     voice=voice,
-                    input=f"Part {i+1}. {chunk}",
+                    input=f"{include_intro} {chunk}",
                     response_format="mp3",
                 )
                 with open(output_mp3, "wb") as f:
