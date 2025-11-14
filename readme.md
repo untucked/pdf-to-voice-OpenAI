@@ -54,7 +54,8 @@ PDF → Detect Text/OCR → Clean Text → Chunk → OpenAI TTS → MP3s → Mer
 1. Install dependencies  
 ```bash
 pip install -r requirements.txt
-
+```
+---
 
 ## 📁 Files
 - `main_OpenAI.py`: Main script with GUI or config path input
