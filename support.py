@@ -10,9 +10,8 @@ import openai
 import configparser
 import sys
 from pathlib import Path
-from playsound import playsound
 from pydub import AudioSegment
-
+from pydub.playback import play
 
 def clean_text(text):
     # Remove bracketed [1], parenthetical (12)
@@ -118,12 +117,12 @@ def get_full_text(pdf_path, print_text=False):
 def convert_to_mp3_openai(chunks, output_dir, name="output", test_script=False, voice="echo", model="tts-1",
                           include_part_intro=False):
     timestamps_path = os.path.join(output_dir, f"{name}_timestamps.txt")
+    pad_width = len(str(len(chunks)))
     with open(timestamps_path, "w") as ts_file:
         total_time = 0
         for i, chunk in enumerate(chunks):
             print(f"🎤 Generating chunk {i+1}/{len(chunks)}...")
-
-            output_mp3 = os.path.join(output_dir, f"{name}_part{i+1}.mp3")
+            output_mp3 = os.path.join(output_dir, f"{name}_part{str(i+1).zfill(pad_width)}.mp3")
             if os.path.exists(output_mp3):
                 print(f"📁 {output_mp3} exists — skipping.")
                 continue
@@ -151,9 +150,16 @@ def convert_to_mp3_openai(chunks, output_dir, name="output", test_script=False, 
 
                 if test_script:
                     abs_path = str(Path(output_mp3).resolve())
-                    playsound(abs_path)
-                    print(f"🎧 Finished playing: {voice}")
-                    time.sleep(0.5)  # Optional pause between voices
+                    try:
+                        audio = AudioSegment.from_mp3(abs_path)
+                        audio_length_seconds = audio.duration_seconds
+                        print(f"📏 Audio length: {audio_length_seconds:.2f} seconds")
+                        print(f"▶️ Playing: {abs_path}")
+                        play(audio)
+                        print(f"🎧 Finished playing: {voice}")
+                        time.sleep(audio_length_seconds + 0.5)  # slight delay to avoid overlap
+                    except Exception as e:
+                        print(f"❌ Failed to play audio for '{voice}': {e}")
 
             except Exception as e:
                 print(f"❌ Failed to generate chunk {i+1}: {e}")
@@ -167,7 +173,7 @@ def merge_mp3s(AudioSegment, mp3_name, output_dir='output',
     print("🔊 Merging all MP3s into one file...")
 
     merged_audio = AudioSegment.empty()
-    pause = AudioSegment.silent(duration=1000)  # 1.0 seconds of silence
+    pause = AudioSegment.silent(duration=250)  # 0.25 seconds of silence
 
     # Ensure correct order by sorting
     mp3_files = sorted([
@@ -194,7 +200,7 @@ def merge_mp3s(AudioSegment, mp3_name, output_dir='output',
 
         # === Concatenate: [Part Intro] + [Pause] + [Part Audio] + [Pause]
         merged_audio += part_audio + pause
-        current_duration_ms = len(part_audio) + len(pause)
+        current_duration_ms += len(part_audio) + len(pause)
 
     # === Export final merged audio
     final_output = os.path.join(output_dir, f"{mp3_name}_full.mp3")
@@ -237,7 +243,7 @@ if __name__ == "__main__":
         raise FileNotFoundError(f"❌ ffmpeg_probe is set to '{ffprobe_path}', but that file does not exist.")
 
 
-    AudioSegment.converter = which(ffmpeg_path)
+    AudioSegment.converter = ffmpeg_path
 
     os.environ["PATH"] += os.pathsep + os.path.dirname(ffmpeg_path)  # Add to PATH at runtime
 

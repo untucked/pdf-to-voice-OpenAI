@@ -29,7 +29,7 @@ def clean_docx_references(input_file_path):
             cleaned_doc.add_paragraph(cleaned_text)
     
     # Create output path
-    base, ext = os.path.splitext(input_path)
+    base, ext = os.path.splitext(input_file_path)
     output_path = f"{base}_cleaned{ext}"
     
     # Save cleaned document

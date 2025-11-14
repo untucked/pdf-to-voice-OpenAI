@@ -4,7 +4,6 @@ import os
 from pydub.utils import which
 import sys
 import time
-from playsound import playsound
 from pathlib import Path
 #local
 from load_ffmpeg import load_ffmpeg
@@ -15,8 +14,9 @@ ffmpeg_path, ffprobe_path = load_ffmpeg()
 from pydub import AudioSegment
 from pydub.playback import play
 
-AudioSegment.converter = which(ffmpeg_path)
-AudioSegment.ffprobe = which(ffprobe_path)
+AudioSegment.converter = ffmpeg_path
+AudioSegment.ffprobe = ffprobe_path
+
 
 # Set your OpenAI API key here or via environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY") or "your-api-key-here"
@@ -58,25 +58,16 @@ for voice in voices:
         print(f"✅ Saved: {file_path}")
 
     print(f"▶️ Playing: {voice}")
-    if False:
-        try:
-            audio = AudioSegment.from_mp3(file_path)
-            audio_length_seconds = audio.duration_seconds
-            print(f"📏 Audio length: {audio_length_seconds:.2f} seconds") # Print the length
-            play(audio)
-            print(f"🎧 Finished playing: {voice}")
-            time.sleep(audio_length_seconds + 0.5) # slight delay to avoid overlap
-        except Exception as e:
-            print(f"❌ Failed to play '{voice}': {e}")
-            continue  # Continue loop even if playback fails
-    else:
-        abs_path = str(Path(file_path).resolve())
-        try:
-            playsound(abs_path)
-            print(f"🎧 Finished playing: {voice}")
-            time.sleep(0.5)  # Optional pause between voices
-        except Exception as e:
-            print(f"❌ Failed to play '{voice}': {e}")
-            continue
+    try:
+        audio = AudioSegment.from_mp3(file_path)
+        audio_length_seconds = audio.duration_seconds
+        print(f"📏 Audio length: {audio_length_seconds:.2f} seconds") # Print the length
+        play(audio)
+        print(f"🎧 Finished playing: {voice}")
+        time.sleep(audio_length_seconds + 0.5) # slight delay to avoid overlap
+    except Exception as e:
+        print(f"❌ Failed to play '{voice}': {e}")
+        continue  # Continue loop even if playback fails
+
 
 print("\nAll voice tests completed.")

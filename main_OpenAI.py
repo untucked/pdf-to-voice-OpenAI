@@ -16,8 +16,8 @@ from load_ffmpeg import load_ffmpeg
 
 ffmpeg_path, ffprobe_path = load_ffmpeg()
 
-AudioSegment.converter = which(ffmpeg_path)
-AudioSegment.ffprobe = which(ffprobe_path)
+AudioSegment.converter = ffmpeg_path
+AudioSegment.ffprobe = ffprobe_path
 
 
 test_load_pdf = False

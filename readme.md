@@ -11,6 +11,7 @@ This tool converts PDF files into spoken audio (MP3). It handles:
 - **Speech synthesis** using OpenAI's `tts-1` or `tts-1-hd` models
 
 Why? Because I don’t want to pay for Adobe’s read-aloud tools — and now I don’t need to.
+PDF → Detect Text/OCR → Clean Text → Chunk → OpenAI TTS → MP3s → Merge → Final Audio
 
 ---
 
@@ -48,6 +49,13 @@ Why? Because I don’t want to pay for Adobe’s read-aloud tools — and now I 
 
 ---
 
+## 🚀 Quick Start
+
+1. Install dependencies  
+```bash
+pip install -r requirements.txt
+
+
 ## 📁 Files
 - `main_OpenAI.py`: Main script with GUI or config path input
 - `support.py`: All logic for cleaning, OCR, conversion, merging
@@ -57,7 +65,19 @@ Why? Because I don’t want to pay for Adobe’s read-aloud tools — and now I 
 
 ---
 
+## OpenAI
+
+Voice options
+https://platform.openai.com/docs/guides/text-to-speech/voice-options
+
+Audio scripting:
+https://platform.openai.com/docs/api-reference/audio/createSpeech
+
+Model:
+https://platform.openai.com/docs/models/gpt-4o-mini-tts
+
 ## 🧪 Testing OpenAI Voices
+
 Use `test_voices.py`:
 ```bash
 python test_voices.py
@@ -106,7 +126,7 @@ ffprobe -version
 ## 📁 Cloning & Pushing to Git
 ```bash
 git clone https://github.com/untucked/pdf-to-voice-OpenAI.git
-cd pdf-to-voice
+cd pdf-to-voice-OpenAI
 ```
 
 Push code:

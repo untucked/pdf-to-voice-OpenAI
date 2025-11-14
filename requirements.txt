@@ -1,4 +1,7 @@
+pillow
 openai
 pydub
 simpleaudio
-playsound
+pdfplumber
+pytesseract
+pdf2image
